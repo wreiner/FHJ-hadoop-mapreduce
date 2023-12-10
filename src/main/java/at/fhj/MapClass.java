@@ -2,6 +2,8 @@ package at.fhj;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,6 +24,8 @@ import org.apache.hadoop.mapreduce.Mapper;
  */
 public class MapClass extends Mapper<LongWritable, Text, Text, IntWritable>{
 	private static final Pattern LINE_PATTERN = Pattern.compile("^\\d{2}\\.(\\d{2})\\.(\\d{4});(?!9\\d+;)\\d+;.*?;(\\d+);");
+
+	private static final Map<String, Map> map = new HashMap<String, Map>();
 
 	private static final IntWritable one = new IntWritable(1);
 	private boolean yearlyKey;
@@ -61,6 +65,17 @@ public class MapClass extends Mapper<LongWritable, Text, Text, IntWritable>{
 		if (this.yearlyKey) {
 			useKey += "." + m.group(2);
 		}
+
+		if (!map.containsKey(useKey)) {
+			map.put(useKey, new HashMap<String, Integer>());
+		}
+
+		if (map.get(useKey).containsKey(m.group(3))) {
+			System.out.println("JOB " + m.group(3) + " already found in " + useKey);
+			return;
+		}
+
+		map.get(useKey).put(m.group(3), 1);
 
 		word.set(useKey);
 		context.write(word, one);
