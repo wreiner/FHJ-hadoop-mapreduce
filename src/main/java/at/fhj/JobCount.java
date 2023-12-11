@@ -42,7 +42,7 @@ public class JobCount extends Configured implements Tool {
 		}
 		conf.setBoolean("yearly", yearlyKey);
 
-		Job job = Job.getInstance(conf, "my word count");
+		Job job = Job.getInstance(conf, "job count");
 		job.setJarByClass(JobCount.class);
 		
 		/** Add input and output file paths to job based on the arguments passed (either OS or HDFS files) */
