@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +26,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 public class MapClass extends Mapper<LongWritable, Text, Text, IntWritable>{
 	private static final Pattern LINE_PATTERN = Pattern.compile("^\\d{2}\\.(\\d{2})\\.(\\d{4});(?!9\\d+;)\\d+;.*?;(\\d+);");
 
-	private static final Map<String, Map> map = new HashMap<String, Map>();
+	private static final Map<String, Map<String, Integer>> map = new ConcurrentHashMap<>();
 
 	private static final IntWritable one = new IntWritable(1);
 	private boolean yearlyKey;
